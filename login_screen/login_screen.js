@@ -193,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default login;
+export default LoginScreen;

@@ -1,9 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './HomeScreen'; // Assuming HomeScreen is in the same directory as App.js
-import Login from './login/Login'; // Correct import for your Login component
-import login from './login/login.js';
+import HomeScreen from './HomeScreen'; 
+import login_screen from './login_screen/login_screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +11,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Login" component={login} />
+        <Stack.Screen name="Login" component={login_screen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
