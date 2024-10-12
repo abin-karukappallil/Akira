@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const navigation = useNavigation();
+
+const handleSignUpPress = () => {
+    navigation.navigate('Signup');
+};
 
   return (
     <View style={styles.container}>
@@ -57,7 +65,7 @@ const LoginScreen = () => {
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account? </Text>
         <TouchableOpacity>
-          <Text style={styles.signupLink}>SIGN UP</Text>
+          <Text  onPress={handleSignUpPress} style={styles.button}>SIGN UP</Text>
         </TouchableOpacity>
       </View>
       
@@ -70,9 +78,9 @@ const LoginScreen = () => {
         <TouchableOpacity style={[styles.socialButton, styles.twitterButton]}>
           <Feather name="twitter" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
-          <Feather name="apple" size={24} color="white" />
-        </TouchableOpacity>
+        {/* <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
+          <Feather name="apple" size={24} color="white" />   //workavunilla
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -188,9 +196,9 @@ const styles = StyleSheet.create({
   twitterButton: {
     backgroundColor: '#1DA1F2',
   },
-  appleButton: {
-    backgroundColor: 'white',
-  },
+  // appleButton: {
+  //   backgroundColor: 'white',
+  // },
 });
 
 export default LoginScreen;
