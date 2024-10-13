@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#2A2A2A',
-    borderRadius: 5,
+    borderRadius: 50,
     padding: 10,
     color: 'white',
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#2A2A2A',
-    borderRadius: 5,
+    borderRadius: 50,
   },
   passwordInput: {
     flex: 0.95,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   signUpButton: {
     backgroundColor: '#FF9F0A',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     alignItems: 'center',
     marginTop: 20,
   },
