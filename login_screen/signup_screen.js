@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUpScreen = () => {
   const [name, setName] = useState('');
@@ -9,6 +10,11 @@ const SignUpScreen = () => {
   const [retypePassword, setRetypePassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setShowRetypePassword] = useState(false);
+  const  navigation = useNavigation();
+  
+  navigation.setOptions({
+    headerShown: false,
+  });
 
   const handleSignUp = () => {
  
@@ -17,7 +23,7 @@ const SignUpScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar translucent backgroundColor="transparent" />
       <View style={styles.content}>
         <TouchableOpacity style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
@@ -100,7 +106,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   backButton: {
-    marginBottom: 20,
+    marginBottom: 75,
+    marginTop: 50,
   },
   title: {
     fontSize: 28,
@@ -133,7 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   passwordInput: {
-    flex: 1,
+    flex: 0.95,
     padding: 10,
     color: 'white',
   },

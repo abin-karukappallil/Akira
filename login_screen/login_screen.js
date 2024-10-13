@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,13 +10,18 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+  navigation.setOptions({
+    headerShown: false,
+  })
 
 const handleSignUpPress = () => {
     navigation.navigate('Signup');
+    
 };
 
   return (
     <View style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" />
       <Text style={styles.title}>Log In</Text>
       <Text style={styles.subtitle}>Please sign in to your existing account</Text>
       
@@ -43,7 +48,7 @@ const handleSignUpPress = () => {
             secureTextEntry={!showPassword}
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Feather name={showPassword ? "eye" : "eye-off"} size={24} color="gray" />
+            <Feather  name={showPassword ? "eye" : "eye-off"} size={24} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
@@ -65,7 +70,7 @@ const handleSignUpPress = () => {
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account? </Text>
         <TouchableOpacity>
-          <Text  onPress={handleSignUpPress} style={styles.button}>SIGN UP</Text>
+          <Text  onPress={handleSignUpPress}  style={styles.button}>SIGN UP</Text>
         </TouchableOpacity>
       </View>
       
@@ -94,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 10,
@@ -106,6 +111,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 20,
+    
   },
   label: {
     color: 'gray',
@@ -113,7 +119,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#2C2C2C',
-    borderRadius: 5,
+    borderRadius: 50,
     padding: 10,
     color: 'white',
   },
@@ -121,10 +127,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#2C2C2C',
-    borderRadius: 5,
+    borderRadius: 50,
   },
   passwordInput: {
-    flex: 1,
+    flex: 0.95,
     padding: 10,
     color: 'white',
   },
@@ -156,6 +162,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
+    borderRadius: 50,
   },
   loginButtonText: {
     color: 'white',
