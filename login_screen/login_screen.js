@@ -70,7 +70,7 @@ const handleSignUpPress = () => {
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account? </Text>
         <TouchableOpacity>
-          <Text  onPress={handleSignUpPress}  style={styles.button}>SIGN UP</Text>
+          <Text  onPress={handleSignUpPress}  style={styles.signupLink}>SIGN UP</Text>
         </TouchableOpacity>
       </View>
       
@@ -174,14 +174,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   signupText: {
-    color: 'gray',
+    color: 'FF8C00',
   },
   signupLink: {
     color: '#FF8C00',
     fontWeight: 'bold',
   },
   orText: {
-    color: 'gray',
+    color: '#white',
     textAlign: 'center',
     marginBottom: 20,
   },

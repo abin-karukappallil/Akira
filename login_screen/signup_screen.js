@@ -21,11 +21,15 @@ const SignUpScreen = () => {
     console.log('Sign up pressed');
   };
 
+  const handleBackPress = () => {
+    navigation.navigate('Login');
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
       <View style={styles.content}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.title}>Sign Up</Text>
