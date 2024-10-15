@@ -11,9 +11,9 @@ const categories = [
 ];
 
 const restaurants = [
-  { name: 'Rose Garden Restaurant', cuisines: ['Burger', 'Chicken', 'Rice', 'Wings'], rating: 4.7, deliveryFee: 'Free', deliveryTime: '20 min' },
-  { name: 'Rose Garden Restaurant', cuisines: ['Burger', 'Chicken', 'Rice', 'Wings'], rating: 4.7, deliveryFee: 'Free', deliveryTime: '20 min' },
-  { name: 'Pizza Palace', cuisines: ['Pizza', 'Wings'], rating: 4.8, deliveryFee: '4.5 kms', deliveryTime: '30 min' },
+  { name: 'Rose Garden Restaurant', cuisines: ['Burger', 'Chicken', 'Rice', 'Wings'], rating: 4.7, deliveryFee: 'Free', deliveryTime: '20 min', imageUrl: 'https://raw.githubusercontent.com/notft/Nasa_space_apps/refs/heads/main/app/home/h1.jpg' },
+  { name: 'Rose Garden Restaurant', cuisines: ['Burger', 'Chicken', 'Rice', 'Wings'], rating: 4.7, deliveryFee: 'Free', deliveryTime: '20 min', imageUrl: 'https://raw.githubusercontent.com/notft/Nasa_space_apps/refs/heads/main/app/home/pngegg%20(2).png' },
+  { name: 'Pizza Palace', cuisines: ['Pizza', 'Wings'], rating: 4.8, deliveryFee: '4.5 kms', deliveryTime: '30 min', imageUrl: 'https://raw.githubusercontent.com/notft/Nasa_space_apps/refs/heads/main/app/home/h1.jpg' },
 ];
 
 export default function Dashboard() {
@@ -56,6 +56,7 @@ export default function Dashboard() {
       style={styles.restaurantCard}
     >
       <TouchableOpacity onPress={() => navigation.navigate('Restaurant')}>
+      <Image source={{ uri: item.imageUrl }} style={styles.restaurantImage} />
         <Text style={styles.restaurantName}>{item.name}</Text>
         <Text style={styles.cuisines}>{item.cuisines.join(' • ')}</Text>
         <View style={styles.restaurantInfo}>
