@@ -16,24 +16,33 @@ const restaurants = [
   { name: 'Pizza Palace', cuisines: ['Pizza', 'Wings'], rating: 4.8, deliveryFee: '4.5 kms', deliveryTime: '30 min', imageUrl: 'https://raw.githubusercontent.com/notft/Nasa_space_apps/refs/heads/main/app/home/h1.jpg' },
 ];
 
-export default function Dashboard() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  // const [name, setName] = useState('');
-  // useEffect(() => {
-  //   async function fetchName() {
-  //     try {
-  //       // const session = await AsyncStorage.getItem('session');
-  //       const response = await fetch(`http://136.185.21.210:26908/validate?session=${session}`);
-  //       const data = await response.json();
-  //       setName(data.name);
-  //     } catch (error) {
-  //       console.error(error);
-  //       setName('NGO'); // Set fallback name on error
-  //     }
-  //   }
+/*
+api res eg.
 
-  //   fetchName();
-  // }, []);
+"resturant": {
+  "name": '',
+  "address": '',
+  "ratings": '',
+  "deliveryFee": '',
+  "deliveryTime": '',
+  "imageUrl": '',
+}
+*/
+export default function Dashboard() {
+  
+  const [selectedCategory, setSelectedCategory] = useState('All');                
+  useEffect(() => {
+    async function fetchRes() {
+      try {
+        const response = await fetch(`endpoint`);
+        const data = await response.json(); 
+      } catch (error) {
+        throw new Error('Failed to fetch Resturantsss');
+      }
+    }
+
+    fetchRes();
+  }, []);
 
   const renderCategory = ({ item }) => (
     <TouchableOpacity
@@ -265,3 +274,4 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 });
+
