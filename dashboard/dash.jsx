@@ -24,6 +24,7 @@ api res eg.
   "address": '',
   "ratings": '',
   "deliveryFee": '',
+  
   "deliveryTime": '',
   "imageUrl": '',
 }

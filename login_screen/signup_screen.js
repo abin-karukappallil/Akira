@@ -17,7 +17,7 @@ const SignUpScreen = () => {
   });
 
   const handleSignUp = () => {
- 
+      navigation.navigate('Dashboard');
     console.log('Sign up pressed');
   };
 
