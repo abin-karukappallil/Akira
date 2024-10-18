@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet, ScrollView } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { MotiView, MotiText, MotiImage } from 'moti';
+import { useNavigation } from '@react-navigation/native';
 
 const categories = [
   { name: 'All' },
-  { name: 'Fruits'},
-  { name: 'Meals'},
-  { name: 'Pizza'},
+  { name: 'Fruits' },
+  { name: 'Meals' },
+  { name: 'Pizza' },
 ];
 
 const restaurants = [
@@ -16,29 +16,20 @@ const restaurants = [
   { name: 'Pizza Palace', cuisines: ['Pizza', 'Wings'], rating: 4.8, deliveryFee: '4.5 kms', deliveryTime: '30 min', imageUrl: 'https://raw.githubusercontent.com/notft/Nasa_space_apps/refs/heads/main/app/home/h1.jpg' },
 ];
 
-/*
-api res eg.
-
-"resturant": {
-  "name": '',
-  "address": '',
-  "ratings": '',
-  "deliveryFee": '',
-  
-  "deliveryTime": '',
-  "imageUrl": '',
-}
-*/
 export default function Dashboard() {
-  
-  const [selectedCategory, setSelectedCategory] = useState('All');                
+  const navigation = useNavigation();
+  navigation.setOptions({
+    headerShown: false,
+  });
+
+  const [selectedCategory, setSelectedCategory] = useState('All');
   useEffect(() => {
     async function fetchRes() {
       try {
         const response = await fetch(`endpoint`);
-        const data = await response.json(); 
+        const data = await response.json();
       } catch (error) {
-        throw new Error('Failed to fetch Resturantsss');
+        throw new Error('Failed to fetch Restaurants');
       }
     }
 
@@ -53,20 +44,14 @@ export default function Dashboard() {
       ]}
       onPress={() => setSelectedCategory(item.name)}
     >
-      {/* <Image source={item.icon} style={styles.categoryIcon} /> */}
       <Text style={styles.categoryText}>{item.name}</Text>
     </TouchableOpacity>
   );
 
   const renderRestaurant = ({ item }) => (
-    <MotiView
-      from={{ opacity: 0, translateY: 50 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{ type: 'timing', duration: 500 }}
-      style={styles.restaurantCard}
-    >
-      <TouchableOpacity onPress={() => navigation.navigate('Restaurant')}>
-      <Image source={{ uri: item.imageUrl }} style={styles.restaurantImage} />
+    <View style={styles.restaurantCard}>
+      <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+        <Image source={{ uri: item.imageUrl }} style={styles.restaurantImage} />
         <Text style={styles.restaurantName}>{item.name}</Text>
         <Text style={styles.cuisines}>{item.cuisines.join(' • ')}</Text>
         <View style={styles.restaurantInfo}>
@@ -83,21 +68,14 @@ export default function Dashboard() {
           </View>
         </View>
       </TouchableOpacity>
-    </MotiView>
+    </View>
   );
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <MotiText
-            from={{ opacity: 0, translateY: -20 }}
-            animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: 'timing', duration: 500 }}
-            style={styles.greeting}
-          >
-            Hey, Good Afternoon!
-          </MotiText>
+          <Text style={styles.greeting}>Hey, Good Afternoon!</Text>
           <View style={styles.headerIcons}>
             <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.iconButton}>
               <Feather name="shopping-bag" size={24} color="#FFA500" />
@@ -275,4 +253,3 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 });
-
