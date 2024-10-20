@@ -1,39 +1,46 @@
-import React, { useEffect, useRef } from 'react';
-import { View, SafeAreaView, StyleSheet, Image, Text, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, SafeAreaView, StyleSheet, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFonts, Sen_400Regular } from '@expo-google-fonts/sen';
 import AppLoading from 'expo-app-loading';
 import { useNavigation } from '@react-navigation/native';
 
-const items = [
-    { name: "Chooru morum", quantity: "1", img: "https://raw.githubusercontent.com/abin-karukappallil/Nasa_space_apps/refs/heads/main/app/cart/pngegg%20(6).png" },
-    { name: "Choorum morum", quantity: "1", img: "https://raw.githubusercontent.com/abin-karukappallil/Nasa_space_apps/refs/heads/main/app/cart/pngegg%20(6).png" },
-    { name: "Choorum morum", quantity: "1", img: "https://raw.githubusercontent.com/abin-karukappallil/Nasa_space_apps/refs/heads/main/app/cart/pngegg%20(6).png" },
-];
-
 const Cart = () => {
-    const isMounted = useRef(true); // Track if component is mounted
+    const [cartData, setCartData] = useState({});
+    const isMounted = useRef(true);
     let [fontsLoaded] = useFonts({
         Sen_400Regular,
     });
     const navigation = useNavigation();
-
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
-        
+        const fetchCartData = async () => {
+            try {
+                const response = await fetch('https://akira.free.beeceptor.com/cartItems');
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    setCartData(result.data);
+                }
+            } catch (error) {
+                console.error('Error fetching cart data:', error);
+            }
+        };
+
+        fetchCartData();
+
         return () => {
-            isMounted.current = false; // Cleanup: set to false on unmount
+            isMounted.current = false; 
         };
     }, [navigation]);
 
     if (!fontsLoaded) {
         return <AppLoading />;
     }
-
-    const renderCart = ({ item }) => (
-        <View style={styles.cartContainer}>
+    const renderCartItem = (key, item) => (
+        <View key={key} style={styles.cartContainer}>
             <View style={styles.cartImgV}>
-                <Image source={{ uri: item.img }} style={styles.cartItems} />
+                <Image source={{ uri: item.img }}  resizeMode="cover" style={styles.cartItems} />
             </View>
             <View style={styles.cartAlgn}>
                 <Text style={styles.cartText}>{item.name}</Text>
@@ -41,7 +48,7 @@ const Cart = () => {
                     <TouchableOpacity>
                         <Icon name="minus" size={14} color="white" />
                     </TouchableOpacity>
-                    <Text style={styles.cartQuantity}>{item.quantity}</Text>
+                    <Text style={styles.cartQuantity}>1</Text>
                     <TouchableOpacity>
                         <Icon name="plus" size={14} color="white" />
                     </TouchableOpacity>
@@ -65,30 +72,25 @@ const Cart = () => {
                     <Text style={styles.headText}>Cart</Text>
                 </View>
             </View>
-            <FlatList
-                data={items}
-                renderItem={renderCart}
-                keyExtractor={(item, index) => index.toString()}
-                contentContainerStyle={styles.flatListContent}
-            />
+            <ScrollView contentContainerStyle={styles.flatListContent}>
+                {Object.keys(cartData).map((key) => renderCartItem(key, cartData[key]))}
+            </ScrollView>
             <View style={styles.AddressContainer}>
-            <View style={styles.Address}>
-                <View>
-
-                    <Text style={{opacity: 0.5,color: 'black',}}>Pickup Address</Text>
+                <View style={styles.Address}>
+                    <Text style={{ opacity: 0.5, color: 'black' }}>Pickup Address</Text>
+                    <Text style={styles.addressText}>
+                        St josephs college of engineering palai
+                    </Text>
                 </View>
-                <Text style={{color: 'black',marginTop: 10,fontWeight: '500',textTransform: 'uppercase'}}>St josephs college of engineering palai</Text>
+                <View style={styles.total}>
+                    <Text style={styles.totalText}>Total: {Object.keys(cartData).length}</Text>
+                </View>
+                <View>
+                    <TouchableOpacity style={styles.placeButton}>
+                        <Text style={styles.placeText}>PLACE ORDER</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.total}>
-                <Text style={styles.totalText}>Total:  3</Text>
-            </View>
-            <View>
-                <TouchableOpacity style={styles.placeButton}>
-                    <Text style={styles.placeText}>PLACE ORDER</Text>
-                </TouchableOpacity>
-            </View>
-            </View>
-
         </SafeAreaView>
     );
 };
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
         paddingTop: 30,
     },
     headBlock: {
-       // marginBottom: 20,
+       marginBottom: 20,
     },
     header: {
         flexDirection: 'row',
