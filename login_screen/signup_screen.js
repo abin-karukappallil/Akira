@@ -17,7 +17,7 @@ const SignUpScreen = () => {
   });
 
   const handleSignUp = () => {
- 
+      navigation.navigate('Dashboard');
     console.log('Sign up pressed');
   };
 
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
+    padding: 10,
   },
   backButton: {
     marginBottom: 75,
