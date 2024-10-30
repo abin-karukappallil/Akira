@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import { userLogin } from '../api/userApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const LoginScreen = () => {
@@ -18,6 +19,20 @@ const handleSignUpPress = () => {
     navigation.navigate('Signup');
     
 };
+
+const handleLogin = () =>{
+  userLogin({
+    email: email,
+    password: password,
+  }).then((res) => {
+    if(res.status==200){
+      AsyncStorage.setItem("AccessToken",res.data.token);
+      navigation.replace("Dashboard");
+    }
+  }).catch(err => {
+    console.log(err);
+  })
+}
 
   return (
     <View style={styles.container}>
