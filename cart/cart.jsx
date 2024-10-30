@@ -16,7 +16,7 @@ const Cart = () => {
         navigation.setOptions({ headerShown: false });
         const fetchCartData = async () => {
             try {
-                const response = await fetch('https://akira.free.beeceptor.com/cartItems');
+                const response = await fetch('https://fodiee.free.beeceptor.com/cart');
                 const result = await response.json();
 
                 if (result.status === 'success') {
@@ -46,11 +46,11 @@ const Cart = () => {
                 <Text style={styles.cartText}>{item.name}</Text>
                 <View style={styles.quantityContainer}>
                     <TouchableOpacity>
-                        <Icon name="minus" size={14} color="white" />
+                        {/* <Icon name="minus" size={14} color="white" /> */}
                     </TouchableOpacity>
-                    <Text style={styles.cartQuantity}>1</Text>
+                    <Text style={styles.cartQuantity}>Quantity: 1</Text>
                     <TouchableOpacity>
-                        <Icon name="plus" size={14} color="white" />
+                        {/* <Icon name="plus" size={14} color="white" /> */}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     },
     cartQuantity: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 12,
         marginHorizontal: 10,
     },
     cartAlgn: {
@@ -206,6 +206,11 @@ const styles = StyleSheet.create({
     totalText:{
         opacity: 0.4,
         fontSize: 17,
+        textTransform: 'uppercase',
+    },
+    addressText: {
+        paddingTop: 5,
+        fontWeight: "600",
         textTransform: 'uppercase',
     }
 });
