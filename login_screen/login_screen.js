@@ -1,40 +1,58 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { userLogin } from '../api/userApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  
   navigation.setOptions({
     headerShown: false,
-  })
+  });
 
-const handleSignUpPress = () => {
+  const handleSignUpPress = () => {
     navigation.navigate('Signup');
-    
-};
+  };
 
-const handleLogin = () =>{
-  userLogin({
-    email: email,
-    password: password,
-  }).then((res) => {
-    if(res.status==200){
-      AsyncStorage.setItem("AccessToken",res.data.token);
-      navigation.replace("Dashboard");
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
     }
-  }).catch(err => {
-    console.log(err);
-    throw new Error("Login error");
 
-  })
-}
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://127.0.0.1:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        await AsyncStorage.setItem('userToken', data.access_token);
+        navigation.replace('Dashboard');
+      } else {
+        Alert.alert('Error', data.detail || 'Invalid email or password');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', 'Failed to login. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -47,6 +65,7 @@ const handleLogin = () =>{
         <TextInput
           style={styles.input}
           placeholder="example@gmail.com"
+          placeholderTextColor="#808080"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -60,12 +79,13 @@ const handleLogin = () =>{
           <TextInput
             style={styles.passwordInput}
             placeholder="••••••••••"
+            placeholderTextColor="#808080"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Feather  name={showPassword ? "eye" : "eye-off"} size={24} color="gray" />
+            <Feather name={showPassword ? "eye" : "eye-off"} size={24} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
@@ -80,14 +100,20 @@ const handleLogin = () =>{
         </TouchableOpacity>
       </View>
       
-      <TouchableOpacity onClick={()=>handleLogin()} style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>LOG IN</Text>
+      <TouchableOpacity 
+        onPress={handleLogin} 
+        style={[styles.loginButton, isLoading && styles.disabledButton]}
+        disabled={isLoading}
+      >
+        <Text style={styles.loginButtonText}>
+          {isLoading ? 'LOGGING IN...' : 'LOG IN'}
+        </Text>
       </TouchableOpacity>
       
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account? </Text>
-        <TouchableOpacity>
-          <Text  onPress={handleSignUpPress}  style={styles.signupLink}>SIGN UP</Text>
+        <TouchableOpacity onPress={handleSignUpPress}>
+          <Text style={styles.signupLink}>SIGN UP</Text>
         </TouchableOpacity>
       </View>
       
@@ -100,9 +126,6 @@ const handleLogin = () =>{
         <TouchableOpacity style={[styles.socialButton, styles.twitterButton]}>
           <Feather name="twitter" size={24} color="white" />
         </TouchableOpacity>
-        {/* <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
-          <Feather name="apple" size={24} color="white" />   //workavunilla
-        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -128,7 +151,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 20,
-    
   },
   label: {
     color: 'gray',
@@ -176,10 +198,12 @@ const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: '#FF8C00',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     alignItems: 'center',
     marginBottom: 20,
-    borderRadius: 50,
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
   loginButtonText: {
     color: 'white',
@@ -191,14 +215,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   signupText: {
-    color: 'FF8C00',
+    color: 'gray',
   },
   signupLink: {
     color: '#FF8C00',
     fontWeight: 'bold',
   },
   orText: {
-    color: '#white',
+    color: 'white',
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -220,9 +244,6 @@ const styles = StyleSheet.create({
   twitterButton: {
     backgroundColor: '#1DA1F2',
   },
-  // appleButton: {
-  //   backgroundColor: 'white',
-  // },
 });
 
 export default LoginScreen;

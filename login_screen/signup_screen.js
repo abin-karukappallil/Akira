@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,20 +10,64 @@ const SignUpScreen = () => {
   const [retypePassword, setRetypePassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setShowRetypePassword] = useState(false);
-  const  navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
   
   navigation.setOptions({
     headerShown: false,
   });
 
-  const handleSignUp = () => {
-      navigation.navigate('Dashboard');
-    console.log('Sign up pressed');
+  const handleSignUp = async () => {
+    if (!name || !email || !password || !retypePassword) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== retypePassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://127.0.0.1:8000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert(
+          'Success', 
+          'Account created successfully', 
+          [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('Login')
+            }
+          ]
+        );
+      } else {
+        Alert.alert('Error', data.detail || 'Failed to create account');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      Alert.alert('Error', 'Failed to create account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBackPress = () => {
     navigation.navigate('Login');
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -55,6 +99,7 @@ const SignUpScreen = () => {
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
+            autoCapitalize="none"
           />
         </View>
 
@@ -92,8 +137,14 @@ const SignUpScreen = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-          <Text style={styles.signUpButtonText}>SIGN UP</Text>
+        <TouchableOpacity 
+          style={[styles.signUpButton, isLoading && styles.disabledButton]} 
+          onPress={handleSignUp}
+          disabled={isLoading}
+        >
+          <Text style={styles.signUpButtonText}>
+            {isLoading ? 'SIGNING UP...' : 'SIGN UP'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -158,6 +209,9 @@ const styles = StyleSheet.create({
   signUpButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 });
 
