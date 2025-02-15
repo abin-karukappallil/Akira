@@ -8,7 +8,7 @@ import Dashboard from './dashboard/dash';
 import Cart from './cart/cart';
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
-
+import Add from './add/add';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -20,6 +20,7 @@ const App = () => {
         <Stack.Screen name="Signup"component={SignUpScreen} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name='Cart' component={Cart} />
+        <Stack.Screen name='Add' component={Add} />
       </Stack.Navigator>
     </NavigationContainer>
   );
