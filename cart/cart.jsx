@@ -17,7 +17,7 @@ const Cart = () => {
         const fetchCartData = async () => {
             try {
                 const response = await fetch('https://akira.free.beeceptor.com/cart');
-                const result = await response.json();
+   const result = await response.json();
 
                 if (result.status === 'success') {
                     setCartData(result.data);

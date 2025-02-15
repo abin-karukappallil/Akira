@@ -32,6 +32,7 @@ const handleLogin = () =>{
   }).catch(err => {
     console.log(err);
     throw new Error("Login error");
+
   })
 }
 
