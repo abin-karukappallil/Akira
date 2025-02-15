@@ -22,6 +22,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "jsEngine": "hermes",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

@@ -16,7 +16,7 @@ const Cart = () => {
         navigation.setOptions({ headerShown: false });
         const fetchCartData = async () => {
             try {
-                const response = await fetch('https://fodiee.free.beeceptor.com/cart');
+                const response = await fetch('https://akira.free.beeceptor.com/cart');
                 const result = await response.json();
 
                 if (result.status === 'success') {

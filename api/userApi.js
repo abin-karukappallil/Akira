@@ -3,7 +3,7 @@ import { ApiManage } from "./api";
 export const userLogin = async data => {
     try{
 
-        const res = await ApiManage("/user/login",{
+        const res = await ApiManage("/login",{
             method: "POST",
             headers: {
                 'content-type': 'application/json',

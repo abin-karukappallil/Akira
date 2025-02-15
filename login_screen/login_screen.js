@@ -31,6 +31,7 @@ const handleLogin = () =>{
     }
   }).catch(err => {
     console.log(err);
+    throw new Error("Login error");
   })
 }
 
@@ -78,7 +79,7 @@ const handleLogin = () =>{
         </TouchableOpacity>
       </View>
       
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity onClick={()=>handleLogin()} style={styles.loginButton}>
         <Text style={styles.loginButtonText}>LOG IN</Text>
       </TouchableOpacity>
       
