@@ -1,4 +1,8 @@
-from fastapi import FastAPI, HTTPException, Depends
+import os
+import shutil
+from fastapi import FastAPI, HTTPException, Depends, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from passlib.context import CryptContext
 from jose import JWTError, jwt
@@ -11,17 +15,35 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = FastAPI()
-
+app.mount("/static", StaticFiles(directory=UPLOAD_FOLDER), name="static")
 conn = sqlite3.connect('users.db', check_same_thread=False)
 cursor = conn.cursor()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     hashed_password TEXT NOT NULL
+)
+''')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS uploads (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    file_path TEXT NOT NULL
 )
 ''')
 conn.commit()
@@ -75,3 +97,41 @@ def login_for_access_token(form_data: LoginForm):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": form_data.email}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post("/api/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    token: str = Depends(oauth2_scheme)
+):
+    try:
+        # Verify token and get user email
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_email: str = payload.get("sub")
+        if user_email is None:
+            raise HTTPException(status_code=401, detail="Invalid authentication")
+
+        # Create unique filename
+        file_extension = os.path.splitext(file.filename)[1]
+        unique_filename = f"{datetime.now().timestamp()}{file_extension}"
+        file_location = os.path.join(UPLOAD_FOLDER, unique_filename)
+
+        # Save file
+        with open(file_location, "wb+") as file_object:
+            file_object.write(await file.read())
+
+        # Save to database
+        cursor.execute(
+            "INSERT INTO uploads (user_email, file_path) VALUES (?, ?)",
+            (user_email, file_location)
+        )
+        conn.commit()
+
+        return {
+            "message": "File uploaded successfully",
+            "file_url": f"/static/{unique_filename}"
+        }
+
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
