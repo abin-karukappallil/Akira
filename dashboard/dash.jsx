@@ -127,7 +127,8 @@ export default function Dashboard() {
 
 const styles = StyleSheet.create({
   safeArea: {
-    padding: 10,
+    padding: 8,
+    paddingTop: 28,
     flex: 1,
     backgroundColor: '#fff',
   },
